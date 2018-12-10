@@ -99,12 +99,22 @@ class MultipartObject
 
     }
 
+    /**
+     * Returns the time this process has taken to execute.
+     * @return the duraiton in milliseconds, or zero if it has not yet started.
+     */
     long getProcessDuration() {
 
-        return (processStartTimestamp == 0 || endTimestamp == 0) ? 0 : (endTimestamp - processStartTimestamp);
+        return processStartTimestamp == 0 ? 0 :
+                (endTimestamp == 0 ? System.currentTimeMillis() - processStartTimestamp :
+                        endTimestamp - processStartTimestamp);
 
     }
 
+    /**
+     * Returns the tree hash calculated for this part.
+     * @return a byte-array containing the SHA-256 tree hash.
+     */
     byte[] getTreeHash() {
 
         return treeHash;
@@ -141,6 +151,10 @@ class MultipartObject
 
     }
 
+    /**
+     * Sets the tree hash calculated for this part.
+     * @param treeHash a byte-array containing the SHA-256 tree hash.
+     */
     void setTreeHash(byte[] treeHash) {
 
         this.treeHash = treeHash;
@@ -167,6 +181,11 @@ class MultipartObject
     static class UploadRangeComparator implements Comparator<MultipartObject>
     {
 
+        /**
+         * Extracts the starting byte number from a range string.
+         * @param rangeString the multipart range string.
+         * @return the starting byte as an integer.
+         */
         private static int extractStartByte(String rangeString) {
 
             Matcher m = Pattern.compile("(\\d+)-\\d+/\\*").matcher(rangeString);
